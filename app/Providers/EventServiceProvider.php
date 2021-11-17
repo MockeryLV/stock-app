@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\SentEmailEvent;
+use App\Listeners\SentEmailNotification;
+use App\Models\Email;
+use App\Observers\EmailObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        SentEmailEvent::class => [
+            SentEmailNotification::class,
+        ]
     ];
 
     /**
@@ -27,6 +34,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Email::observe(new EmailObserver());
     }
 }
